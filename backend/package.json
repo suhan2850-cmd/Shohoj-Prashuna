@@ -4,10 +4,11 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node prisma/prepare-schema.mjs",
     "build": "prisma generate && next build",
     "start": "next start",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev --name init",
+    "db:generate": "node prisma/prepare-schema.mjs && prisma generate",
+    "db:migrate": "node prisma/prepare-schema.mjs && prisma migrate dev --name init",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio"
   },
