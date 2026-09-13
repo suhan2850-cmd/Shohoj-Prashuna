@@ -1,0 +1,55 @@
+services:
+  - type: web
+    name: shohoj-porashuna-api
+    runtime: node
+    plan: free
+    region: singapore
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma db push --accept-data-loss=false && npm run db:seed && npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: shohoj-porashuna-db
+          property: connectionString
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: PAYMENT_WEBHOOK_SECRET
+        generateValue: true
+      - key: NEXT_PUBLIC_APP_URL
+        fromService:
+          type: web
+          name: shohoj-porashuna-api
+          property: host
+      - key: ADMIN_EMAIL
+        value: admin@shohoj.local
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: BKASH_APP_KEY
+        sync: false
+      - key: BKASH_APP_SECRET
+        sync: false
+      - key: BKASH_USERNAME
+        sync: false
+      - key: BKASH_PASSWORD
+        sync: false
+      - key: NAGAD_MERCHANT_ID
+        sync: false
+      - key: NAGAD_MERCHANT_NUMBER
+        sync: false
+      - key: NAGAD_PUBLIC_KEY
+        sync: false
+      - key: NAGAD_PRIVATE_KEY
+        sync: false
+      - key: SSLCOMMERZ_STORE_ID
+        sync: false
+      - key: SSLCOMMERZ_STORE_PASSWORD
+        sync: false
+
+databases:
+  - name: shohoj-porashuna-db
+    plan: free
+    region: singapore
+    postgresMajorVersion: "17"
